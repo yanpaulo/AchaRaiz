@@ -11,12 +11,14 @@ namespace Raiz.WebApp.Controllers
     {
         public ActionResult Index()
         {
+            ViewBag.Saida = new string[0];
             return View();
         }
 
         [HttpPost]
         public ActionResult Index(string expression, double a = -1, double b = -1)
         {
+            ViewBag.Saida = new string[0];
             try
             {
                 AchaRaiz ar = new AchaRaiz(new FuncaoTexto(expression));
