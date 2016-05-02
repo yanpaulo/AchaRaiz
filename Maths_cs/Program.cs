@@ -34,7 +34,7 @@ namespace Raiz
                 string saida = "" +
                 $"Bissecão:\n\t {ar.Bisseccao(-3, -1, epsilon)}\n" +
                 $"MPF:\n\t {ar.MPF(-3, -1, epsilon, epsilon)}\n" +
-                $"MPF2:\n\t {ar.MPF2(-1.5, 0.1, 0.1)}\n" +
+                $"MPF2:\n\t {ar.MPF2(-1.5, epsilon, epsilon)}\n" +
                 $"Raphson:\n\t {ar.Raphson(-3, epsilon, epsilon)}\n" +
                 $"Secante:\n\t {ar.Secante(-3, -1, epsilon, epsilon)}\n";
 
