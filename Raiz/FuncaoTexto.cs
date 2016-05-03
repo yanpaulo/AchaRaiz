@@ -10,7 +10,6 @@ namespace Raiz
     public class FuncaoTexto : Funcao
     {
         private string texto;
-
         public FuncaoTexto(string texto)
         {
             this.texto = texto;
@@ -19,7 +18,7 @@ namespace Raiz
         public override double Em(double x)
         {
             Expression ex = new Expression(texto.Replace("x", (x.ToString().Replace(",", "."))));
-            return (double)ex.Evaluate();
+            return double.Parse(ex.Evaluate().ToString());
         }
 
         public override Func<double, double> AsDelegate()
