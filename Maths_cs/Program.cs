@@ -74,7 +74,7 @@ namespace Raiz
                 string obj = f.Em(a).ToString();
                 obj = f.Em(x0).ToString();
             }
-            catch (EvaluationException)
+            catch (Exception)
             {
                 Console.WriteLine("Função inválida.");
                 return;
@@ -106,7 +106,7 @@ namespace Raiz
                 sw.Stop();
                 Console.WriteLine($"{nome}:\n\t {res}, {sw.ElapsedMilliseconds}ms, {sw.ElapsedTicks} ticks\n");
             }
-            catch (EvaluationException)
+            catch (Exception)
             {
                 var color = Console.BackgroundColor;
                 Console.BackgroundColor = ConsoleColor.Blue;
