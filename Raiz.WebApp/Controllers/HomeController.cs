@@ -35,7 +35,7 @@ namespace Raiz.WebApp.Controllers
                         string obj = f.Em(model.A).ToString();
                         obj = f.Em(model.X0).ToString();
                     }
-                    catch (EvaluationException)
+                    catch (Exception)
                     {
                         ModelState.AddModelError("F", "Função inválida.");
                     }
@@ -92,7 +92,7 @@ namespace Raiz.WebApp.Controllers
                 saida.TimeMilisseconds = sw.ElapsedMilliseconds;
                 saida.TimeTicks = sw.ElapsedTicks;
             }
-            catch (EvaluationException)
+            catch (Exception)
             {
                 //Erro
                 saida.MensagemErro = $"Erro em {nome}.";
