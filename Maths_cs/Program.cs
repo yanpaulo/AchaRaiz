@@ -1,6 +1,7 @@
 ﻿using NCalc;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,66 +65,41 @@ namespace Raiz
             {
                 Console.WriteLine("Função inválida.");
                 return;
-            } 
+            }
             #endregion
 
 
             AchaRaiz ar = new AchaRaiz(f);
             AchaRaizesResult? res = null;
 
-            try
-            {
-                res = ar.Bisseccao(a, b, e0);
-                Console.WriteLine($"Bissecão:\n\t {res}\n");
-            }
-            catch (EvaluationException)
-            {
-                Console.WriteLine("Erro em Bissecão.");
-            }
-
-            try
-            {
-                res = ar.MPF(a, b, e0, e1);
-                Console.WriteLine($"Posição Falsa:\n\t {res}\n");
-            }
-            catch (EvaluationException)
-            {
-                Console.WriteLine("Erro em Posição Falsa.");
-            }
-
-            try
-            {
-                res = ar.MPF2(x0, e0, e1);
-                Console.WriteLine($"Ponto Fixo (Prato Feito):\n\t {res}\n");
-            }
-            catch (EvaluationException)
-            {
-                Console.WriteLine("Erro em Ponto Fixo.");
-            }
-
-            try
-            {
-                res = ar.Raphson(x0, e0, e1);
-                Console.WriteLine($"Raphson:\n\t {res}\n");
-            }
-            catch (EvaluationException)
-            {
-                Console.WriteLine("Erro em Raphson.");
-            }
-
-            try
-            {
-                res = ar.Secante(x0, x1, e0, e1);
-                Console.WriteLine($"Secante:\n\t {res}\n");
-            }
-            catch (EvaluationException)
-            {
-                Console.WriteLine("Erro em Secante.");
-            }
-
+            Avalia("Bissecão", () => ar.Bisseccao(a, b, e0));
+            Avalia("Posição Falsa", () => ar.MPF(a, b, e0, e1));
+            Avalia("Posição Fixa (Prato Feito)", () => ar.MPF2(x0, e0, e1));
+            Avalia("Raphson", () => ar.Raphson(x0, e0, e1));
+            Avalia("Raphson", () => ar.Secante(x0, x1, e0, e1));
+            
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                Console.ReadKey(); 
+                Console.ReadKey();
+            }
+        }
+
+        static void Avalia(string nome, Func<AchaRaizesResult> metodo)
+        {
+            Stopwatch sw = new Stopwatch();
+            try
+            {
+                sw.Start();
+                var res = metodo.Invoke();
+                sw.Stop();
+                Console.WriteLine($"{nome}:\n\t {res}, {sw.ElapsedMilliseconds}ms, {sw.ElapsedTicks} ticks\n");
+            }
+            catch (EvaluationException)
+            {
+                var color = Console.BackgroundColor;
+                Console.BackgroundColor = ConsoleColor.Blue;
+                Console.WriteLine($"\nErro em {nome}.\n\n");
+                Console.BackgroundColor = color;
             }
         }
 
