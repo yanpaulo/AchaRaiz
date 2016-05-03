@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Raiz.WebApp.Models.DadosSaida>
+
+@{
+    ViewBag.Title = "Result";
+}
+
+<h2>Result</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Result.Raiz)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Result.K)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TimeMilisseconds)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TimeTicks)
+        </th>
+        
+    </tr>
+
+@foreach (var item in Model) {
+    if (!item.Erro)
+	{
+		<tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Result.Raiz)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Result.K)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TimeMilisseconds)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TimeTicks)
+        </td>
+        
+
+    </tr> 
+    }
+    else
+    {
+        <tr style="background-color: orangered">
+            <td>@item.Nome</td>
+            <td>Erro.</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    }
+}
+
+</table>

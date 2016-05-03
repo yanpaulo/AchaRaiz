@@ -1,9 +1,12 @@
 ﻿using NCalc;
+using Raiz.WebApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using static System.Math;
 
 namespace Raiz.WebApp.Controllers
 {
@@ -11,31 +14,48 @@ namespace Raiz.WebApp.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Saida = new string[0];
-            return View();
+            DadosEntrada dados = new DadosEntrada();
+            return View(dados);
         }
 
         [HttpPost]
-        public ActionResult Index(string expression, double a = -1, double b = -1)
+        public ActionResult Index(DadosEntrada model)
         {
-            ViewBag.Saida = new string[0];
-            try
+            if (ModelState.IsValid)
             {
-                AchaRaiz ar = new AchaRaiz(new FuncaoTexto(expression));
-                double epsilon = 1e-5;
-                string saida = "" +
-                $"Bisseccao: {ar.Bisseccao(-3, -1, epsilon)}\n" +
-                $"MPF: {ar.MPF(-3, -1, epsilon, epsilon)}\n" +
-                $"MPF2: {ar.MPF2(-1.5, 0.1, 0.1)}\n" +
-                $"Raphson: {ar.Raphson(-3, epsilon, epsilon)}\n" +
-                $"Secante: {ar.Secante(-3, -1, epsilon, epsilon)}\n";
-                ViewBag.Saida = saida.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                IFuncao f;
+                #region Leitura da função
+                if (!string.IsNullOrWhiteSpace(model.F))
+                {
+                    f = new FuncaoTexto(model.F);
+                    #region "Validação" da função
+                    try
+                    {
+                        //Gambiarra pra testar se a função é válida
+                        string obj = f.Em(model.A).ToString();
+                        obj = f.Em(model.X0).ToString();
+                    }
+                    catch (EvaluationException)
+                    {
+                        ModelState.AddModelError("F", "Função inválida.");
+                    }
+                    #endregion
+                }
+                else
+                {
+                    f = new FuncaoDelegate(x => Pow(x, 2) + 2 * x);
+                }
+                #endregion
+
+                if (ModelState.IsValid)
+                {
+                    var res = Avalia(model, f);
+                    return View("Result", res);
+                }
+
             }
-            catch (EvaluationException)
-            {
-                ModelState.AddModelError("expression", "Função inválida");
-            }
-            return View();
+
+            return View(model);
 
         }
         public ActionResult About()
@@ -45,11 +65,41 @@ namespace Raiz.WebApp.Controllers
             return View();
         }
 
-        public ActionResult Contact()
+        static IEnumerable<DadosSaida> Avalia(DadosEntrada dados, IFuncao f)
         {
-            ViewBag.Message = "Your contact page.";
+            AchaRaiz ar = new AchaRaiz(f, dados.K);
 
-            return View();
+            yield return Avalia("Bissecão", () => ar.Bisseccao(dados.A, dados.B, dados.E0));
+            yield return Avalia("Posição Falsa", () => ar.MPF(dados.A, dados.B, dados.E0, dados.E1));
+            yield return Avalia("Posição Fixa (Prato Feito)", () => ar.MPF2(dados.X0, dados.E0, dados.E1));
+            yield return Avalia("Raphson", () => ar.Raphson(dados.X0, dados.E0, dados.E1));
+            yield return Avalia("Raphson", () => ar.Secante(dados.X0, dados.X1, dados.E0, dados.E1));
+
+        }
+
+        static DadosSaida Avalia(string nome, Func<AchaRaizesResult> metodo)
+        {
+            //Nome
+            DadosSaida saida = new DadosSaida() { Nome = nome };
+            Stopwatch sw = new Stopwatch();
+            try
+            {
+                sw.Start();
+                var res = metodo.Invoke();
+                sw.Stop();
+                //Resultado
+                saida.Result = res;
+                saida.TimeMilisseconds = sw.ElapsedMilliseconds;
+                saida.TimeTicks = sw.ElapsedTicks;
+            }
+            catch (EvaluationException)
+            {
+                //Erro
+                saida.MensagemErro = $"Erro em {nome}.";
+                saida.Erro = true;
+            }
+
+            return saida;
         }
     }
 }
