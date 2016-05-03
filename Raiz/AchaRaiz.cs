@@ -33,11 +33,17 @@ namespace Raiz
         private Func<double, double> f, f_;
         private int kMax = 1000;
 
-        public AchaRaiz(IFuncao f)
+        public AchaRaiz(IFuncao f, int k)
         {
             Funcao = f;
             this.f = f.AsDelegate();
             this.f_ = f.Derivada().AsDelegate();
+            kMax = k;
+        }
+
+        public AchaRaiz(IFuncao f) : this(f, 1000)
+        {
+            
         }
 
         /// <summary>

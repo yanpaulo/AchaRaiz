@@ -18,38 +18,51 @@ namespace Raiz
             double e0 = 1e-5, e1 = 1e-5;
             int k = 1000;
             #region Leitura de Parâmetros
-            for (int i = 0; i < args.Length; i += 2)
+            try
             {
-                //Segundo caractere de cada argumento. Ex.:
-                //-f, segundo caractede: f
-                char p = args[i][1];
-                string value = args[i + 1];
-                switch (p)
+                for (int i = 0; i < args.Length; i += 2)
                 {
-                    case 'f':
-                        f = new FuncaoTexto(value);
-                        break;
-                    case 'i':
-                        var iStrings = value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                        a = double.Parse(iStrings[0]);
-                        b = double.Parse(iStrings[1]);
-                        break;
-                    case 'x':
-                        var xStrings = value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                        x0 = double.Parse(xStrings[0]);
-                        x1 = double.Parse(xStrings[1]);
-                        break;
-                    case 'e':
-                        var eStrings = value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                        x0 = double.Parse(eStrings[0]);
-                        x1 = double.Parse(eStrings[1]);
-                        break;
-                    case 'k':
-                        k = int.Parse(value);
-                        break;
-                    default:
-                        break;
+                    //Segundo caractere de cada argumento. Ex.:
+                    //-f, segundo caractede: f
+                    char p = args[i][1];
+                    string value = args[i + 1];
+                    switch (p)
+                    {
+                        case 'f':
+                            f = new FuncaoTexto(value);
+                            break;
+                        case 'i':
+                            var iStrings = value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                            a = double.Parse(iStrings[0]);
+                            b = double.Parse(iStrings[1]);
+                            break;
+                        case 'x':
+                            var xStrings = value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                            x0 = double.Parse(xStrings[0]);
+                            x1 = double.Parse(xStrings[1]);
+                            break;
+                        case 'e':
+                            var eStrings = value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                            e0 = double.Parse(eStrings[0]);
+                            e1 = double.Parse(eStrings[1]);
+                            break;
+                        case 'k':
+                            k = int.Parse(value);
+                            break;
+                        default:
+                            break;
+                    }
                 }
+            }
+            catch (ArgumentException)
+            {
+                Console.WriteLine("Entrada inválida.");
+                return;
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Console.WriteLine("Entrada inválida.");
+                return;
             }
             #endregion
 
@@ -69,8 +82,7 @@ namespace Raiz
             #endregion
 
 
-            AchaRaiz ar = new AchaRaiz(f);
-            AchaRaizesResult? res = null;
+            AchaRaiz ar = new AchaRaiz(f, k);
 
             Avalia("Bissecão", () => ar.Bisseccao(a, b, e0));
             Avalia("Posição Falsa", () => ar.MPF(a, b, e0, e1));
