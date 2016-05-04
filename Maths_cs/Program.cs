@@ -84,11 +84,11 @@ namespace Raiz
 
             AchaRaiz ar = new AchaRaiz(f, k);
 
-            Avalia("Bissecão", () => ar.Bisseccao(a, b, e0));
+            Avalia("Bissecção", () => ar.Bisseccao(a, b, e0));
             Avalia("Posição Falsa", () => ar.MPF(a, b, e0, e1));
             Avalia("Posição Fixa (Prato Feito)", () => ar.MPF2(x0, e0, e1));
             Avalia("Raphson", () => ar.Raphson(x0, e0, e1));
-            Avalia("Raphson", () => ar.Secante(x0, x1, e0, e1));
+            Avalia("Secante", () => ar.Secante(x0, x1, e0, e1));
             
             if (System.Diagnostics.Debugger.IsAttached)
             {

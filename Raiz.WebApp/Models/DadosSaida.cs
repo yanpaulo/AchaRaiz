@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web;
 
@@ -11,8 +12,10 @@ namespace Raiz.WebApp.Models
 
         public AchaRaizesResult Result { get; set; }
 
+        [DisplayName("Tempo(ms)")]
         public long TimeMilisseconds { get; set; }
 
+        [DisplayName("Ticks")]
         public long TimeTicks { get; set; }
 
         public bool Erro { get; set; }

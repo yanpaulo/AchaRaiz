@@ -73,7 +73,7 @@ namespace Raiz.WebApp.Controllers
             yield return Avalia("Posição Falsa", () => ar.MPF(dados.A, dados.B, dados.E0, dados.E1));
             yield return Avalia("Posição Fixa (Prato Feito)", () => ar.MPF2(dados.X0, dados.E0, dados.E1));
             yield return Avalia("Raphson", () => ar.Raphson(dados.X0, dados.E0, dados.E1));
-            yield return Avalia("Raphson", () => ar.Secante(dados.X0, dados.X1, dados.E0, dados.E1));
+            yield return Avalia("Secante", () => ar.Secante(dados.X0, dados.X1, dados.E0, dados.E1));
 
         }
 
